@@ -12,13 +12,12 @@ public class SecretEntranceTest {
         entrance = new SecretEntrance();
     }
 
-    @Test
-    public void ensureStartingPositionIsCorrect() {
-        assertEquals(STARTING_POSITION, entrance.getStartingPosition());
+    @Test public void ensureStartingPositionIsCorrect() {
+        assertEquals(STARTING_POSITION, entrance.getDialPosition());
     }
 
-    @Test public void ensureDialPositionIsCorrect() {
-        assertEquals(STARTING_POSITION, entrance.getDialPosition());
+    @Test public void ensureTheEntranceIsLockedAtTheBeginning() {
+        assertEquals(0, entrance.getPassword());
     }
 
     @Test
@@ -57,6 +56,4 @@ public class SecretEntranceTest {
             System.out.println("The dial rotated " + move + " to point at " + entrance.getDialPosition());
         }
     }
-
-
 }

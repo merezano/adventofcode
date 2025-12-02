@@ -1,13 +1,11 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class SecretEntrance {
     private static final int STARTING_POSITION = 50;
-    private static final int MAX_NUMBER_OF_POSITIONS = 100;
-    private int currentPosition;
+    private static final int DIAL_SIZE = 100;
+    private int dialPosition;
     private int number_of_times_the_dial_pointed_to_zero;
 
     public SecretEntrance() {
-        currentPosition = STARTING_POSITION;
+        dialPosition = STARTING_POSITION;
         number_of_times_the_dial_pointed_to_zero = 0;
     }
 
@@ -16,16 +14,15 @@ public class SecretEntrance {
         SecretEntrance entrance = new SecretEntrance();
         try {
             java.nio.file.Path path = java.nio.file.Paths.get("src/resources/input.txt");
-            java.util.List<String> moves = java.nio.file.Files.readAllLines(path);
+            java.util.List<String> rotations = java.nio.file.Files.readAllLines(path);
 
-            System.out.println("Processing " + moves.size() + " moves from file...");
+            System.out.println("Processing " + rotations.size() + " rotations from file...");
             System.out.println("The dial starts by pointing at " + entrance.getStartingPosition());
 
-            for (String move : moves) {
-                if (!move.trim().isEmpty()) {
-                    entrance.rotateDial(move.trim());
+            for (String rotation : rotations)
+                if (!rotation.trim().isEmpty()) {
+                    entrance.rotateDial(rotation.trim());
                 }
-            }
 
             System.out.println("Final dial position: " + entrance.getDialPosition());
             System.out.println("Password (times dial pointed to zero): " + entrance.getPassword());
@@ -39,25 +36,26 @@ public class SecretEntrance {
         return STARTING_POSITION;
     }
 
-    public void rotateDial(String move) {
+    public void rotateDial(String rotation) {
+        int number_of_clicks = Integer.parseInt(rotation.substring(1));
 
         int direction;
-        if (move.charAt(0) == 'L') {
-            direction = -1;
-        } else direction = 1;
+        if (rotation.charAt(0) == 'L') direction = -1;
+        else direction = 1;
 
-        int number_of_clicks = Integer.parseInt(move.substring(1)) * direction;
+        //number_of_times_the_dial_pointed_to_zero += Math.abs(Math.floorDivExact(dialPosition + number_of_clicks * direction, DIAL_SIZE));
+        //dialPosition = Math.floorMod(dialPosition + number_of_clicks * direction, DIAL_SIZE);
         click(number_of_clicks, direction);
     }
 
     public int getDialPosition() {
-        return currentPosition;
+        return dialPosition;
     }
 
     private void click(int howMany, int direction) {
-        for (int i = 0; i < Math.abs(howMany); i++) {
-            currentPosition = Math.floorMod(currentPosition + direction, MAX_NUMBER_OF_POSITIONS);
-            if (currentPosition == 0) number_of_times_the_dial_pointed_to_zero++;
+        for (int i = 0; i < howMany; i++) {
+            dialPosition = Math.floorMod(dialPosition + direction, DIAL_SIZE);
+            if (dialPosition == 0) number_of_times_the_dial_pointed_to_zero++;
         }
     }
 
