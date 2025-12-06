@@ -31,6 +31,19 @@ public class PaperRollGridTest {
     @Test
     public void ensureItIsAbleToDetectAccessiblePaperRolls() {
         assertTrue(grid.thereIsAnAccessiblePaperRollAtPosition(0, 2));
+    }
+
+    @Test
+    public void ensureItIsAbleToCountAccessiblePaperRolls() {
         assertEquals(13, grid.countAccessiblePaperRolls());
+    }
+
+    @Test public void ensureItIsToRemoveAccessiblePaperRolls() {
+        assertTrue(grid.thereIsAPaperRollAtPosition(0, 2));
+
+        grid.removeAccessiblePaperRolls();
+        grid.print();
+        assertFalse(grid.thereIsAPaperRollAtPosition(0, 2));
+        assertEquals(12, grid.countAccessiblePaperRolls());
     }
 }

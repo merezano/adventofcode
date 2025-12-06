@@ -1,20 +1,19 @@
 public class PaperRollGrid {
 
+    public static final int MAX_ADJACENT_PAPER_ROLLS_FOR_ACCESSIBILITY = 4;
+    public static final char PAPER_ROLL_CHAR = '@';
+    public static final String EMPTY_SPOT_CHAR = ".";
+
     public PaperRollGrid(int rows, int cols) {
-        this.grid = new PaperRoll[rows][cols];
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                this.grid[i][j] = null;
-            }
-        }
+        this.grid = new boolean[rows][cols];
     }
 
-    private final PaperRoll[][] grid;
+    private boolean[][] grid;
 
     public void print() {
         for (int row = 0; row < this.grid.length; row++) {
             for (int col = 0; col < this.grid[row].length; col++) {
-                System.out.print(thereIsAPaperRollAtPosition(row, col) ? "@" : ".");
+                System.out.print(thereIsAPaperRollAtPosition(row, col) ? PAPER_ROLL_CHAR : EMPTY_SPOT_CHAR);
             }
             System.out.println();
         }
@@ -22,9 +21,7 @@ public class PaperRollGrid {
 
     public void setRow(int row, String paperRolls) {
         for (int col = 0; col < paperRolls.length(); col++) {
-            if (paperRolls.charAt(col) == '@') {
-                this.grid[row][col] = new PaperRoll();
-            }
+            this.grid[row][col] = (paperRolls.charAt(col) == PAPER_ROLL_CHAR);
         }
     }
 
@@ -32,7 +29,7 @@ public class PaperRollGrid {
         if (row < 0 || row >= this.grid.length || col < 0 || col >= this.grid[row].length) {
             return false;
         }
-        return this.grid[row][col] != null;
+        return this.grid[row][col];
     }
 
     public boolean thereIsAnAccessiblePaperRollAtPosition(int row, int col) {
@@ -40,7 +37,7 @@ public class PaperRollGrid {
             return false;
         }
 
-        return (countAdjacentPaperRolls(row, col) < 4);
+        return (countAdjacentPaperRolls(row, col) < MAX_ADJACENT_PAPER_ROLLS_FOR_ACCESSIBILITY);
     }
 
     private int countAdjacentPaperRolls(int row, int col) {
@@ -72,5 +69,22 @@ public class PaperRollGrid {
             }
         }
         return accessiblePaperRolls;
+    }
+
+    public int removeAccessiblePaperRolls() {
+        boolean[][] nextGrid = new boolean[this.grid.length][this.grid[0].length];
+        int paperRollsRemoved = 0;
+
+        for (int row = 0; row < this.grid.length; row++) {
+            for (int col = 0; col < this.grid[row].length; col++) {
+                if (this.thereIsAnAccessiblePaperRollAtPosition(row, col)) {
+                    paperRollsRemoved++;
+                } else {
+                    nextGrid[row][col] = this.grid[row][col];
+                }
+            }
+        }
+        this.grid = nextGrid;
+        return paperRollsRemoved;
     }
 }
